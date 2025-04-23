@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TestCompose202504</string>
+
+    <string name="back">戻る</string>
+
+    <string name="impression_example">HorizontalPager+LazyColumnで行のVisibility変化を検出</string>
+    <string name="bottom_navigation">ボトムナビゲーション内のAndroidViewのライフサイクル</string>
+
+    <string name="home">ホーム</string>
+    <string name="search">検索</string>
+    <string name="profile">プロフ</string>
+    <string name="disabled">無効</string>
+</resources>

@@ -1,0 +1,45 @@
+[versions]
+androidGradlePlugin = "8.9.2"
+androidxActivityCompose = "1.10.1"
+androidxActivityKtx = "1.10.1"
+androidxComposeBom = "2025.04.00"
+androidxCoreKtx = "1.16.0"
+androidxEspressoCore = "3.6.1"
+androidxFragment="1.8.6"
+androidxLifecycle = "2.8.7"
+androidxNavigationCompose = "2.8.9"
+androidxTestExtJunit = "1.2.1"
+junit = "4.13.2"
+kotlin = "2.0.21"
+timber = "5.0.1"
+
+[libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivityCompose" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivityKtx" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidxComposeBom" }
+androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-compose-material-icons-core = { module="androidx.compose.material:material-icons-core"}
+androidx-compose-material-icons-extended = { module="androidx.compose.material:material-icons-extended"}
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCoreKtx" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxEspressoCore" }
+androidx-fragment-ktx = { module="androidx.fragment:fragment-ktx", version.ref = "androidxFragment" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidxLifecycle" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose" ,version.ref="androidxNavigationCompose"}
+junit = { module = "junit:junit", version.ref = "junit" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
