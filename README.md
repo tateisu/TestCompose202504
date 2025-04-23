@@ -1,0 +1,10 @@
+View → Compose 移行に関するプライベートな試験アプリ
+
+# HorizontalPager + LazyColumn 使用時の行の可視性変化の追跡
+- HorizontalPager + LazyColumnを使った画面構成で、行が表示開始した/表示終了したことを検知してなんらかのコードを実行できるようにする。
+
+# ボトムナビゲーションでAndroidViewを使う
+- とあるアプリの既存実装でFragmentを使ってボトムナビゲーションを実装していたが、その各タブを段階的にCompose移行したい。そのため、ボトムナビゲーションの各タブをAndroidViewで表示してタブ内にFragmentContainerViewをもたせる。
+- androidx.navigation:navigation-compose を使うと非表示のタブはComposeされなくなりAndroidViewはその時点で失われてしまうが、これはとあるアプリの既存実装で期待されている挙動ではない
+- 仕方ないのでタブの選択状態によりFragmentContainerViewのvisibilityだけを変更する。
+- タブの表示状態にかかわらず各タブのフラグメントのonResume/onPauseなどのライフサイクルイベントが呼ばれてしまうが、これはとあるアプリの既存実装でも元々起こっていたことだ。
