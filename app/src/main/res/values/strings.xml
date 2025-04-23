@@ -10,4 +10,7 @@
     <string name="search">検索</string>
     <string name="profile">プロフ</string>
     <string name="disabled">無効</string>
+    <string name="impression_example_desc">- HorizontalPager + LazyColumnを使った画面構成で、行が表示開始した/表示終了したことを検知してなんらかのコードを実行できるようにする。</string>
+    <string name="bottom_navigation_desc">- とあるアプリの既存実装でFragmentを使ってボトムナビゲーションを実装していたが、その各タブを段階的にCompose移行したい。そのため、ボトムナビゲーションの各タブをAndroidViewで表示してタブ内にFragmentContainerViewをもたせる。\n- androidx.navigation:navigation-compose を使うと非表示のタブはComposeされなくなりAndroidViewはその時点で失われてしまうが、これはとあるアプリの既存実装で期待されている挙動ではない\n- 仕方ないのでタブの選択状態によりFragmentContainerViewのvisibilityだけを変更する。\n- タブの表示状態にかかわらず各タブのフラグメントのonResume/onPauseなどのライフサイクルイベントが呼ばれてしまうが、これはとあるアプリの既存実装でも元々起こっていたことだ。</string>
+    <string name="description">説明</string>
 </resources>

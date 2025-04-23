@@ -54,6 +54,19 @@ private val AppColorLight = lightColorScheme(
     */
 )
 
+private fun appColorScheme(
+    isDarkTheme:Boolean
+) = when {
+    // 色指定の確認の妨げになるので、 DynamicColorを無効にする
+    //        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+    //            val context = LocalContext.current
+    //            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    //        }
+
+    isDarkTheme -> AppColorDark
+    else -> AppColorLight
+}
+
 // Set of Material typography styles to start with
 val App1Typography = Typography(
     bodyLarge = TextStyle(
@@ -84,23 +97,11 @@ val App1Typography = Typography(
 @Composable
 fun App1Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        // 色指定の確認の妨げになるので、 DynamicColorを無効にする
-        //        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-        //            val context = LocalContext.current
-        //            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        //        }
-
-        darkTheme -> AppColorDark
-        else -> AppColorLight
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = appColorScheme(darkTheme),
         typography = App1Typography,
         content = content
     )
