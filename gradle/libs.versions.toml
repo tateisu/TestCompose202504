@@ -37,6 +37,9 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 junit = { module = "junit:junit", version.ref = "junit" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
+androidx-compose-ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding"  }
+
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

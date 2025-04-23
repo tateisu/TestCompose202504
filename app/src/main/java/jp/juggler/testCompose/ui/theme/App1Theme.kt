@@ -18,6 +18,8 @@ object App1Colors {
 }
 
 private val AppColorDark = darkColorScheme(
+    background = Color(0xFF000000),
+    onBackground = Color(0xFFFFFFFF),
     // primary is red
     primary = Color(0xFF8e3e3e), onPrimary = Color(0xFFff0000),
     // secondary is green
@@ -27,6 +29,9 @@ private val AppColorDark = darkColorScheme(
 )
 
 private val AppColorLight = lightColorScheme(
+    background = Color(0xFFFFFFFF),
+    onBackground = Color(0xFF000000),
+
     // primary is red
     primary = Color(0xFFffc3c3), onPrimary = Color(0xFFff0000),
     // secondary is green

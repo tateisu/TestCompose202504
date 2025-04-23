@@ -1,11 +1,10 @@
 package jp.juggler.testCompose.bottomNavigation
 
+import android.view.View
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Home
@@ -18,76 +17,107 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.viewinterop.AndroidViewBinding
 import jp.juggler.testCompose.R
+import jp.juggler.testCompose.databinding.FragmentContainerBinding
 import jp.juggler.testCompose.ui.theme.App1Colors
 import jp.juggler.testCompose.ui.theme.App1Theme
+import jp.juggler.testCompose.utils.inTransaction
+import timber.log.Timber
 
 enum class Screen(
-    val id: String,
-    @StringRes val nameId: Int,
+    // FragmentContainerViewのIDをタブ別に変える
+    val fragmentContainerViewId: Int,
+    // ボトムバーのアイコン
     val icon: ImageVector,
+    // ボトムバーの名前の文字列リソース
+    @StringRes val nameId: Int,
+    // 無効状態なら偽にする
     val enabled: Boolean = true,
 ) {
     Home(
-        id = "home",
+        fragmentContainerViewId = R.id.screen_home,
         nameId = R.string.home,
         icon = Icons.Outlined.Home,
     ),
     Search(
-        id = "search",
+        fragmentContainerViewId = R.id.screen_search,
         nameId = R.string.search,
         icon = Icons.Outlined.Search,
     ),
     Profile(
-        id = "profile",
+        fragmentContainerViewId = R.id.screen_profile,
         nameId = R.string.profile,
         icon = Icons.Outlined.Person,
     ),
     Disabled(
-        id = "disabled",
         nameId = R.string.disabled,
+        fragmentContainerViewId = R.id.screen_disabled,
         icon = Icons.Outlined.Block,
         enabled = false,
     )
 }
 
 @Composable
-fun AnimatedContentScope.ScreenContent(
-    @Suppress("unused")
-    navBackStackEntry: NavBackStackEntry,
+fun BoxScope.ScreenContent(
     screen: Screen,
+    selected: Boolean,
+    createTabFragment: (Screen) -> ScreenFragment,
 ) {
-    AndroidView(
+    val name = stringResource(screen.nameId)
+    AndroidViewBinding(
         modifier = Modifier.fillMaxSize(),
-        factory =
+        // invoked as a signal that the view is about to be attached to the composition hierarchy
+        // in a different context than its original creation.
+        onReset = {
+            Timber.i("FragmentContainerBinding onReset $screen.")
+        },
+        // invoked as a signal that this view and its binding have exited the composition hierarchy entirely
+        // and will not be reused again.
+        // Any additional resources used by the binding should be freed at this time.
+        onRelease = {
+            Timber.i("FragmentContainerBinding onRelease $screen.")
+        },
+        factory = { inflater, parent, attachToParent ->
+            Timber.i("FragmentContainerBinding inflate $screen.")
+            FragmentContainerBinding.inflate(inflater, parent, attachToParent).apply {
+                fragmentContainerView.id = screen.fragmentContainerViewId
+            }
+        },
+        update = {
+            var fragment: ScreenFragment? = fragmentContainerView.getFragment()
+            Timber.i("FragmentContainerBinding update $screen. existing=$fragment")
+            when {
+                // すでに中身のFragmentが存在する
+                fragment != null -> Unit
+                // まだ中身のFragmentが存在しない場合、選択されるまでは作成しない
+                !selected -> Unit
+                // 選択されていてまだFragmentが存在しないなら中身を追加する
+                else -> {
+                    createTabFragment(screen).also {
+                        fragmentContainerView.inTransaction { id -> replace(id, it) }
+                    }
+                }
+            }
+            // 選択状態によりVisibilityを変える
+            fragmentContainerView.visibility = when {
+                selected -> View.VISIBLE
+                else -> View.GONE
+            }
+        }
     )
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            modifier = Modifier.wrapContentSize(),
-            text = stringResource(screen.nameId),
-        )
-    }
 }
 
 @Composable
 fun RowScope.ScreenTabStop(
     screen: Screen,
     selected: Boolean,
-    navController: NavHostController,
+    onClick: (Screen) -> Unit,
 ) {
     NavigationBarItem(
         selected = selected,
@@ -98,16 +128,10 @@ fun RowScope.ScreenTabStop(
             selectedIndicatorColor = Color.Transparent,
         ),
         onClick = {
-            navController.navigate(screen.id) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+            onClick(screen)
         },
         icon = { Icon(screen.icon, contentDescription = null) },
-        label = { Text( stringResource(screen.nameId)) }
+        label = { Text(stringResource(screen.nameId)) }
     )
 }
 
@@ -118,15 +142,14 @@ private fun PreviewBars() {
         darkTheme = false,
         dynamicColor = false,
     ) {
-        val navController = rememberNavController()
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.background,
         ) {
             for (screen in Screen.entries) {
                 ScreenTabStop(
-                    navController = navController,
                     screen = screen,
                     selected = screen == Screen.Search,
+                    onClick = {},
                 )
             }
         }
